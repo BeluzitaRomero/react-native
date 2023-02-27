@@ -5,7 +5,6 @@ import {
   Text,
   TextInput,
   View,
-  Modal,
   Pressable,
 } from "react-native";
 import { useState, useEffect } from "react";
