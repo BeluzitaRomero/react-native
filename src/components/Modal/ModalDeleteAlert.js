@@ -1,5 +1,8 @@
 import { Button, Text, View, Modal, StyleSheet, Pressable } from "react-native";
 
+//Desafio 3: uso de constants
+import Color from "../../constants/colorButtons";
+
 export const ModalDeleteAlert = ({
   visible,
   itemValue,
@@ -27,7 +30,11 @@ export const ModalDeleteAlert = ({
           }}
         >
           <View style={styles.modalButton}>
-            <Button onPress={onPressDel} title="Confirmar" />
+            <Button
+              color={Color.delete}
+              onPress={onPressDel}
+              title="Confirmar"
+            />
           </View>
           <View style={styles.modalButton}>
             <Button title="Cancelar" onPress={onPressCancel} />

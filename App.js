@@ -1,16 +1,16 @@
-import {
-  Button,
-  FlatList,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  Pressable,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useState, useEffect } from "react";
 
-import { ModalError } from "./ModalError";
-import { ModalDeleteAlert } from "./ModalDeleteAlert";
+// import { ModalError } from "./src/components/Modal/ModalError";
+// import { ModalDeleteAlert } from "./src/components/Modal/ModalDeleteAlert";
+// import { List } from "./src/components/List/List";
+import Home from "./src/components/screen/Home";
+import {
+  List,
+  InputItem,
+  ModalDeleteAlert,
+  ModalError,
+} from "./src/components";
 
 export default function App() {
   const [itemText, setItemText] = useState("");
@@ -18,6 +18,8 @@ export default function App() {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [itemSelected, setItemSelected] = useState(null);
+
+  const [start, setStart] = useState(false);
 
   //*Estado para el error de input vacio
   const [err, setErr] = useState(false);
@@ -54,72 +56,40 @@ export default function App() {
     setErr((prev) => !prev);
   };
 
-  return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <TextInput
-          style={styles.input}
-          placeholder="Producto"
-          onChangeText={onChangeText}
-          value={itemText}
-          placeholderTextColor="#CAD2C5"
+  // Desafio 3 -
+  const handleAddTask = () => {
+    setStart(!start);
+  };
+
+  if (start) {
+    return (
+      <View style={{ flex: 1 }}>
+        <InputItem
+          onChange={onChangeText}
+          handleAdd={addItem}
+          itemTextState={itemText}
         />
-        <Button title="Agregar" onPress={addItem} />
-      </View>
-      <View style={styles.itemsContainer}>
-        <FlatList
-          style={{ width: "80%" }}
-          data={items}
-          renderItem={(itemData) => (
-            <Pressable onPress={() => selectItem(itemData.item)}>
-              <Text style={styles.items}>{itemData.item.value}</Text>
-            </Pressable>
-          )}
-          keyExtractor={(item) => item.id}
+        <List items={items} handleSelect={selectItem} />
+
+        <ModalDeleteAlert
+          visible={modalVisible}
+          itemValue={itemSelected?.value}
+          onPressDel={() => onHandlerDelete(itemSelected?.id)}
+          onPressCancel={() => {
+            setModalVisible(false);
+            setItemSelected(null);
+          }}
         />
+        <ModalError onPress={showErr} state={err} />
       </View>
-      <ModalDeleteAlert
-        visible={modalVisible}
-        itemValue={itemSelected?.value}
-        onPressDel={() => onHandlerDelete(itemSelected?.id)}
-        onPressCancel={() => {
-          setModalVisible(false);
-          setItemSelected(null);
-        }}
-      />
-      <ModalError onPress={showErr} state={err} />
-    </View>
-  );
+    );
+  } else {
+    return (
+      <View style={{ flex: 1 }}>
+        <Home handleStart={handleAddTask} />
+      </View>
+    );
+  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#354f52",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-    flex: 1,
-  },
-  input: {
-    borderColor: "#CAD2C5",
-    borderBottomWidth: 1,
-    width: 200,
-    color: "#CAD2C5",
-    fontSize: 18,
-  },
-  itemsContainer: {
-    backgroundColor: "#52796F",
-    padding: 10,
-    flex: 2,
-    alignItems: "center",
-  },
-  items: {
-    fontSize: 18,
-    backgroundColor: "#e6ccb2",
-    marginBottom: 10,
-    borderRadius: 2,
-    padding: 2,
-    textAlign: "center",
-  },
-});
+const styles = StyleSheet.create({});
